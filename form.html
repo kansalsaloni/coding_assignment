@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build a Survey Form using HTML and CSS</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120vh;
+        }
+
+        form {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 350px;
+        }
+
+        .form-control {
+            margin-bottom: 20px;
+        }
+
+        .form-control label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-control input,
+        .form-control select,
+        .form-control textarea {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            width: 80%;
+            font-size: 14px;
+        }
+
+        .form-control input[type="checkbox"] {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #05c46b;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            padding: 12px;
+            width: 48%; /* Adjust as needed */
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #048f57;
+        }
+
+        /* Popup styling */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .close-btn {
+            background-color: #333;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id="form">
+
+        <div class="form-control">
+            <label for="firstname" id="first-name">
+                First Name
+            </label>
+            <input type="text" id="firstname" placeholder="Enter your firstname" required>
+        </div>
+
+        <div class="form-control">
+            <label for="lastname" id="last-name">
+                Last Name
+            </label>
+            <input type="text" id="lastname" placeholder="Enter your lastname" required>
+        </div>
+
+        <div class="form-control">
+            <label for="dob" id="label-dob">
+                Date of Birth
+            </label>
+            <input type="date" id="dob" required>
+        </div>
+
+        <div class="form-control">
+            <label for="country" id="label-country">
+                Country
+            </label>
+            <select name="country" id="country" required>
+                <option value="us">United States</option>
+                <option value="ca">Canada</option>
+                <option value="uk">United Kingdom</option>
+                <option value="au">Australia</option>
+                <option value="in">India</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+
+        <div class="form-control">
+            <label for="gender" id="label-gender">
+                Gender
+            </label>
+            <label for="male"><input type="checkbox" id="male" name="gender" value="Male"> Male</label>
+            <label for="female"><input type="checkbox" id="female" name="gender" value="Female"> Female</label>
+        </div>
+
+        <div class="form-control">
+            <label for="profession" id="label-profession">
+                Profession
+            </label>
+            <input type="text" id="profession" placeholder="Enter your profession" required>
+        </div>
+
+        <div class="form-control">
+            <label for="email" id="label-email">
+                Email
+            </label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-control">
+            <label for="mobile" id="label-mobile">
+                Mobile Number
+            </label>
+            <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
+        </div>
+
+        <div class="buttons-container">
+            <button type="button" onclick="submitForm()">Submit</button>
+            <button type="button" class="reset" onclick="resetForm()">Reset</button>
+        </div>
+
+        <!-- Popup Section -->
+        <div class="overlay" id="overlay"></div>
+        <div class="popup" id="resultPopup">
+            <div class="popup-content">
+                <h2>Survey Results</h2>
+                <p><strong>First Name:</strong> <span id="resultFirstName"></span></p>
+                <p><strong>Last Name:</strong> <span id="resultLastName"></span></p>
+                <p><strong>Date of Birth:</strong> <span id="resultDob"></span></p>
+                <p><strong>Country:</strong> <span id="resultCountry"></span></p>
+                <p><strong>Gender:</strong> <span id="resultGender"></span></p>
+                <p><strong>Profession:</strong> <span id="resultProfession"></span></p>
+                <p><strong>Email:</strong> <span id="resultEmail"></span></p>
+                <p><strong>Mobile Number:</strong> <span id="resultMobile"></span></p>
+                <button class="close-btn" onclick="closePopup()">Close</button>
+            </div>
+        </div>
+
+        <script>
+            function submitForm() {
+                // Check if the form is valid
+                if (document.getElementById("form").checkValidity()) {
+                    // Get form values
+                    const firstName = document.getElementById("firstname").value;
+                    const lastName = document.getElementById("lastname").value;
+                    const dob = document.getElementById("dob").value;
+                    const country = document.getElementById("country").value;
+                    const gender = [...document.querySelectorAll('input[name="gender"]:checked')].map(el => el.value).join(', ');
+                    const profession = document.getElementById("profession").value;
+                    const email = document.getElementById("email").value;
+                    const mobile = document.getElementById("mobile").value;
+
+                    // Display results in the popup
+                    document.getElementById("resultFirstName").innerText = firstName;
+                    document.getElementById("resultLastName").innerText = lastName;
+                    document.getElementById("resultDob").innerText = dob;
+                    document.getElementById("resultCountry").innerText = country;
+                    document.getElementById("resultGender").innerText = gender;
+                    document.getElementById("resultProfession").innerText = profession;
+                    document.getElementById("resultEmail").innerText = email;
+                    document.getElementById("resultMobile").innerText = mobile;
+
+                    // Show the overlay and popup
+                    document.getElementById("overlay").style.display = "block";
+                    document.getElementById("resultPopup").style.display = "block";
+                } else {
+                    // If the form is not valid, trigger form validation
+                    document.getElementById("form").reportValidity();
+                }
+            }
+
+            function resetForm() {
+                // Reset the form
+                document.getElementById("form").reset();
+            }
+
+            function closePopup() {
+                // Close the overlay and popup
+                document.getElementById("overlay").style.display = "none";
+                document.getElementById("resultPopup").style.display = "none";
+            }
+        </script>
+    </form>
+</body>
+</html>
